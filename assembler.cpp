@@ -3,6 +3,10 @@
 #include <iostream>
 using namespace std;
 
+void firstRead(string fileName);
+void secondRead(string fileName);
+void saveToCOE(string fileName);
+
 int main(int argv, char** argc) {
   if (argv != 2) {
     cout << "Please enter input filename." << endl;
@@ -16,13 +20,16 @@ int main(int argv, char** argc) {
   }
   ifstream inFile;
 
+  // Make sure the file is readable.
   inFile.open(file);
   if (!inFile) {
     cout << "File could not be read or found." << endl;
     return 0;
   }
+  inFile.close();
 
   return 0;
 }
+
 
 
