@@ -1,9 +1,11 @@
 #include <fstream>
 #include <string>
+#include <map>
 #include <iostream>
 using namespace std;
 
-void firstRead(ifstream input_file, fstream output_file);
+void firstPass(string input_file, map& labelMap);
+bool isLabel(string line);
 void secondRead(string fileName);
 void saveToCOE(string fileName);
 string add_register_value(string reg, string ins);
@@ -69,142 +71,162 @@ int main(int argv, char** argc) {
     return 0;
   }
 
-  string file = argc[1];
-  if (file.substr(file.length() - 4) != ".asm") {
+  string input_file = argc[1];
+  if (input_file.substr(file.length() - 4) != ".asm") {
     cout << "Invalid file. File does not end in '.asm'." << endl;
     return 0;
   }
-  ifstream inFile;
 
+  ifstream inFile;
   // Make sure the file is readable.
-  inFile.open(file);
+  inFile.open(input_file);
   if (!inFile) {
     cout << "File could not be read or found." << endl;
     return 0;
   }
-
-  // Open the COE file that the data is being written to.
-  ofstream outputFile("./ram_data.coe");
-
-  firstRead(inFile, outputFile);
-  // secondRead();
-
-  outputFile.close();
   inFile.close();
+
+  map<string, int> labelMap;
+  firstPass(input_file, labelMap);
 
   return 0;
 }
 
 /*
-  Used as the first pass through. Leave labels in jump functions as the label,
-  but record the address of the label when you pass through it so you can
-  change it in the second passthrough.
-*/
-void firstRead(ifstream input_file, fstream output_file)
+ * Used as the first pass through. Leave labels in jump functions as the label,
+ * but record the address of the label when you pass through it so you can
+ * change it in the second passthrough.
+ */
+void firstPass(string input_file, map& labelMap)
 {
-  string current_instruction;
-  string current_token;
-  string reg_1;
-  string reg_2;
-
-  // keep reading in data if there is still data to be read
-  while (infile >> current_token)
-  {
-    switch (current_token) {
-      case "add":
-        // Add 0 (because not a multiword) and the ADD op code to our string
-        current_instruction += '0' + ADD_OP;
-        if (infile >> reg_1 >> reg_2) {
-          current_instruction = add_register_value(reg_1, current_instruction);
-          current_instruction = add_register_value(reg_2, current_instruction);
-        }
-        // print out an error if it reachs EOF without 2 reg values
-        else {
-          std::cout << "Error: add instruction did not contain 2 register arguemnents." << '\n';
-        }
-      break;
-
-      case "sub":
-        current_instruction += SUB_OP;
-        // Add 0 (because not a multiword) and the SUB op code to our string
-        current_instruction += '0' + SUB_OP;
-        if (infile >> reg_1 >> reg_2) {
-          current_instruction = add_register_value(reg_1, current_instruction);
-          current_instruction = add_register_value(reg_2, current_instruction);
-        }
-        // print out an error if it reachs EOF without 2 reg values
-        else {
-          std::cout << "Error: sub instruction did not contain 2 register arguemnents." << '\n';
-        }
-      break;
-
-      case "addi":
-        current_instruction += ADDI_OP;
-      break;
-
-      case "shlli":
-        current_instruction += SHLLI_OP;
-      break;
-
-      case "shrli":
-        current_instruction += SHRLI_OP;
-      break;
-
-      case "jump":
-        current_instruction += JUMP_OP;
-      break;
-
-      case "jumpli":
-        current_instruction += JUMPLI_OP;
-      break;
-
-      case "jumpl":
-        current_instruction += JUMPL_OP;
-      break;
-
-      case "jumpg":
-        current_instruction += JUMPG_OP;
-      break;
-
-      case "jumpe":
-        current_instruction += JUMPE_OP;
-      break;
-
-      case "jumpne":
-        current_instruction += JUMPNE_OP;
-      break;
-
-      case "cmp":
-        current_instruction += CMP_OP;
-      break;
-
-      case "ret":
-        current_instruction += RET_OP;
-      break;
-
-      case "load":
-        current_instruction += LOAD_OP;
-      break;
-
-      case "loadi":
-        current_instruction += LOADI_OP;
-      break;
-
-      case "store":
-        current_instruction += STORE_OP;
-      break;
-
-      case "mov":
-        current_instruction += MOV_OP;
-      break;
-
-      default:
-
-      break;
+  string line;
+  int index;
+  ifstream inFile;
+  inFile.open(input_file);
+  if (inFile.is_open()) {
+    while (getline(inFile, line)) {
+      if (isLabel(line)) {
+        // Remove the last char in the string
+        string label = line.substr(0, line.size() - 1);
+        labelMap[label] = index;
+      }
+      index++;
     }
-    current_instruction = "";
   }
+  inFile.close();
 }
+
+/*
+ * Helper function which returns true if the input string is a label.
+ * False otherwise.
+ */
+bool isLabel(string line) {
+  char endOfLine = line[line.length() - 1];
+  return endOfLine == ':';
+}
+
+  // string current_instruction;
+  // string current_token;
+  // string reg_1;
+  // string reg_2;
+
+  // // keep reading in data if there is still data to be read
+  // while (infile >> current_token)
+  // {
+  //   switch (current_token) {
+  //     case "add":
+  //       // Add 0 (because not a multiword) and the ADD op code to our string
+  //       current_instruction += '0' + ADD_OP;
+  //       if (infile >> reg_1 >> reg_2) {
+  //         current_instruction = add_register_value(reg_1, current_instruction);
+  //         current_instruction = add_register_value(reg_2, current_instruction);
+  //       }
+  //       // print out an error if it reachs EOF without 2 reg values
+  //       else {
+  //         std::cout << "Error: add instruction did not contain 2 register arguemnents." << '\n';
+  //       }
+  //     break;
+
+  //     case "sub":
+  //       current_instruction += SUB_OP;
+  //       // Add 0 (because not a multiword) and the SUB op code to our string
+  //       current_instruction += '0' + SUB_OP;
+  //       if (infile >> reg_1 >> reg_2) {
+  //         current_instruction = add_register_value(reg_1, current_instruction);
+  //         current_instruction = add_register_value(reg_2, current_instruction);
+  //       }
+  //       // print out an error if it reachs EOF without 2 reg values
+  //       else {
+  //         std::cout << "Error: sub instruction did not contain 2 register arguemnents." << '\n';
+  //       }
+  //     break;
+
+  //     case "addi":
+  //       current_instruction += ADDI_OP;
+  //     break;
+
+  //     case "shlli":
+  //       current_instruction += SHLLI_OP;
+  //     break;
+
+  //     case "shrli":
+  //       current_instruction += SHRLI_OP;
+  //     break;
+
+  //     case "jump":
+  //       current_instruction += JUMP_OP;
+  //     break;
+
+  //     case "jumpli":
+  //       current_instruction += JUMPLI_OP;
+  //     break;
+
+  //     case "jumpl":
+  //       current_instruction += JUMPL_OP;
+  //     break;
+
+  //     case "jumpg":
+  //       current_instruction += JUMPG_OP;
+  //     break;
+
+  //     case "jumpe":
+  //       current_instruction += JUMPE_OP;
+  //     break;
+
+  //     case "jumpne":
+  //       current_instruction += JUMPNE_OP;
+  //     break;
+
+  //     case "cmp":
+  //       current_instruction += CMP_OP;
+  //     break;
+
+  //     case "ret":
+  //       current_instruction += RET_OP;
+  //     break;
+
+  //     case "load":
+  //       current_instruction += LOAD_OP;
+  //     break;
+
+  //     case "loadi":
+  //       current_instruction += LOADI_OP;
+  //     break;
+
+  //     case "store":
+  //       current_instruction += STORE_OP;
+  //     break;
+
+  //     case "mov":
+  //       current_instruction += MOV_OP;
+  //     break;
+
+  //     default:
+
+  //     break;
+  //   }
+  //   current_instruction = "";
+  // }
 
 string add_register_value(string reg, string ins){
   switch (reg)
