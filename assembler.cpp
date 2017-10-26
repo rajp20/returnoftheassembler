@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 
-void firstPass(string input_file, map& labelMap);
+void firstPass(string input_file, map<string, int>& labelMap);
 bool isLabel(string line);
 void secondRead(string fileName);
 void saveToCOE(string fileName);
@@ -72,7 +72,7 @@ int main(int argv, char** argc) {
   }
 
   string input_file = argc[1];
-  if (input_file.substr(file.length() - 4) != ".asm") {
+  if (input_file.substr(input_file.length() - 4) != ".asm") {
     cout << "Invalid file. File does not end in '.asm'." << endl;
     return 0;
   }
@@ -89,6 +89,10 @@ int main(int argv, char** argc) {
   map<string, int> labelMap;
   firstPass(input_file, labelMap);
 
+  for (auto it = labelMap.cbegin(); it != labelMap.cend(); ++it) {
+    cout << it->first << "\t" << it->second << endl;
+  }
+
   return 0;
 }
 
@@ -97,7 +101,7 @@ int main(int argv, char** argc) {
  * but record the address of the label when you pass through it so you can
  * change it in the second passthrough.
  */
-void firstPass(string input_file, map& labelMap)
+void firstPass(string input_file, map<string, int>& labelMap)
 {
   string line;
   int index;
@@ -106,11 +110,13 @@ void firstPass(string input_file, map& labelMap)
   if (inFile.is_open()) {
     while (getline(inFile, line)) {
       if (isLabel(line)) {
+        cout << line << endl;
         // Remove the last char in the string
         string label = line.substr(0, line.size() - 1);
         labelMap[label] = index;
+      } else {
+        index++;
       }
-      index++;
     }
   }
   inFile.close();
@@ -228,169 +234,169 @@ bool isLabel(string line) {
   //   current_instruction = "";
   // }
 
-string add_register_value(string reg, string ins){
-  switch (reg)
-  {
-    case "$r0":
-      ins += R0_VALUE;
-    break;
+// string add_register_value(string reg, string ins){
+//   switch (reg)
+//   {
+//     case "$r0":
+//       ins += R0_VALUE;
+//     break;
 
-    case "$r1":
-      ins += R1_VALUE;
-    break;
+//     case "$r1":
+//       ins += R1_VALUE;
+//     break;
 
-    case "$r2":
-      ins += R2_VALUE;
-    break;
+//     case "$r2":
+//       ins += R2_VALUE;
+//     break;
 
-    case "$r3":
-      ins += R3_VALUE;
-    break;
+//     case "$r3":
+//       ins += R3_VALUE;
+//     break;
 
-    case "$r4":
-      ins += R4_VALUE;
-    break;
+//     case "$r4":
+//       ins += R4_VALUE;
+//     break;
 
-    case "$r5":
-      ins += R5_VALUE;
-    break;
+//     case "$r5":
+//       ins += R5_VALUE;
+//     break;
 
-    case "$r6":
-      ins += R6_VALUE;
-    break;
+//     case "$r6":
+//       ins += R6_VALUE;
+//     break;
 
-    case "$r7":
-      ins += R7_VALUE;
-    break;
+//     case "$r7":
+//       ins += R7_VALUE;
+//     break;
 
-    case "$r8":
-      ins += R8_VALUE;
-    break;
+//     case "$r8":
+//       ins += R8_VALUE;
+//     break;
 
-    case "$r9":
-      ins += R9_VALUE;
-    break;
+//     case "$r9":
+//       ins += R9_VALUE;
+//     break;
 
-    case "$r10":
-      ins += R10_VALUE;
-    break;
+//     case "$r10":
+//       ins += R10_VALUE;
+//     break;
 
-    case "$r11":
-      ins += R11_VALUE;
-    break;
+//     case "$r11":
+//       ins += R11_VALUE;
+//     break;
 
-    case "$r12":
-      ins += R12_VALUE;
-    break;
+//     case "$r12":
+//       ins += R12_VALUE;
+//     break;
 
-    case "$r13":
-      ins += R13_VALUE;
-    break;
+//     case "$r13":
+//       ins += R13_VALUE;
+//     break;
 
-    case "$r14":
-      ins += R14_VALUE;
-    break;
+//     case "$r14":
+//       ins += R14_VALUE;
+//     break;
 
-    case "$r15":
-      ins += R15_VALUE;
-    break;
+//     case "$r15":
+//       ins += R15_VALUE;
+//     break;
 
-    case "$r16":
-      ins += R16_VALUE;
-    break;
+//     case "$r16":
+//       ins += R16_VALUE;
+//     break;
 
-    case "$r17":
-      ins += R17_VALUE;
-    break;
+//     case "$r17":
+//       ins += R17_VALUE;
+//     break;
 
-    case "$r18":
-      ins += R18_VALUE;
-    break;
+//     case "$r18":
+//       ins += R18_VALUE;
+//     break;
 
-    case "$r19":
-      ins += R19_VALUE;
-    break;
+//     case "$r19":
+//       ins += R19_VALUE;
+//     break;
 
-    case "$r20":
-      ins += R20_VALUE;
-    break;
+//     case "$r20":
+//       ins += R20_VALUE;
+//     break;
 
-    case "$r21":
-      ins += R21_VALUE;
-    break;
+//     case "$r21":
+//       ins += R21_VALUE;
+//     break;
 
-    case "$r22":
-      ins += R22_VALUE;
-    break;
+//     case "$r22":
+//       ins += R22_VALUE;
+//     break;
 
-    case "$r23":
-      ins += R23_VALUE;
-    break;
+//     case "$r23":
+//       ins += R23_VALUE;
+//     break;
 
-    case "$r24":
-      ins += R24_VALUE;
-    break;
+//     case "$r24":
+//       ins += R24_VALUE;
+//     break;
 
-    case "$r25":
-      ins += R25_VALUE;
-    break;
+//     case "$r25":
+//       ins += R25_VALUE;
+//     break;
 
-    case "$r26":
-      ins += R26_VALUE;
-    break;
+//     case "$r26":
+//       ins += R26_VALUE;
+//     break;
 
-    case "$r27":
-      ins += R27_VALUE;
-    break;
+//     case "$r27":
+//       ins += R27_VALUE;
+//     break;
 
-    case "$lr0":
-      ins += LR0_VALUE;
-    break;
+//     case "$lr0":
+//       ins += LR0_VALUE;
+//     break;
 
-    case "$lr1":
-      ins += LR1_VALUE;
-    break;
+//     case "$lr1":
+//       ins += LR1_VALUE;
+//     break;
 
-    case "$lr2":
-      ins += LR2_VALUE;
-    break;
+//     case "$lr2":
+//       ins += LR2_VALUE;
+//     break;
 
-    case "$lr3":
-      ins += LR3_VALUE;
-    break;
+//     case "$lr3":
+//       ins += LR3_VALUE;
+//     break;
 
-    default:
-      std::cout << "Incorrect register name. " <<  reg << " is not a register name." << '\n';
-    break;
-  }
+//     default:
+//       std::cout << "Incorrect register name. " <<  reg << " is not a register name." << '\n';
+//     break;
+//   }
 
-  return ins;
-}
+//   return ins;
+// }
 
-string get_binary_string_from_hex_string (string sHex)
-{
-  string sReturn = "";
-  for (int i = 0; i < sHex.length (); ++i)
-  {
-    switch (sHex [i])
-    {
-      case '0': sReturn.append ("0000"); break;
-      case '1': sReturn.append ("0001"); break;
-      case '2': sReturn.append ("0010"); break;
-      case '3': sReturn.append ("0011"); break;
-      case '4': sReturn.append ("0100"); break;
-      case '5': sReturn.append ("0101"); break;
-      case '6': sReturn.append ("0110"); break;
-      case '7': sReturn.append ("0111"); break;
-      case '8': sReturn.append ("1000"); break;
-      case '9': sReturn.append ("1001"); break;
-      case 'a': sReturn.append ("1010"); break;
-      case 'b': sReturn.append ("1011"); break;
-      case 'c': sReturn.append ("1100"); break;
-      case 'd': sReturn.append ("1101"); break;
-      case 'e': sReturn.append ("1110"); break;
-      case 'f': sReturn.append ("1111"); break;
-    }
-  }
-  return sReturn;
-}
+// string get_binary_string_from_hex_string (string sHex)
+// {
+//   string sReturn = "";
+//   for (int i = 0; i < sHex.length (); ++i)
+//   {
+//     switch (sHex [i])
+//     {
+//       case '0': sReturn.append ("0000"); break;
+//       case '1': sReturn.append ("0001"); break;
+//       case '2': sReturn.append ("0010"); break;
+//       case '3': sReturn.append ("0011"); break;
+//       case '4': sReturn.append ("0100"); break;
+//       case '5': sReturn.append ("0101"); break;
+//       case '6': sReturn.append ("0110"); break;
+//       case '7': sReturn.append ("0111"); break;
+//       case '8': sReturn.append ("1000"); break;
+//       case '9': sReturn.append ("1001"); break;
+//       case 'a': sReturn.append ("1010"); break;
+//       case 'b': sReturn.append ("1011"); break;
+//       case 'c': sReturn.append ("1100"); break;
+//       case 'd': sReturn.append ("1101"); break;
+//       case 'e': sReturn.append ("1110"); break;
+//       case 'f': sReturn.append ("1111"); break;
+//     }
+//   }
+//   return sReturn;
+// }
