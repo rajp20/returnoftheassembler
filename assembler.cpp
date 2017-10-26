@@ -6,7 +6,7 @@ using namespace std;
 void firstRead(ifstream input_file, fstream output_file);
 void secondRead(string fileName);
 void saveToCOE(string fileName);
-void add_register_value(string reg, string ins);
+string add_register_value(string reg, string ins);
 
 // All of the binary opcodes associated with their instruction.
 const string ADD_OP = "00000";
@@ -104,18 +104,38 @@ void firstRead(ifstream input_file, fstream output_file)
 {
   string current_instruction;
   string current_token;
-  string next_token;
+  string reg_1;
+  string reg_2;
 
   // keep reading in data if there is still data to be read
   while (infile >> current_token)
   {
     switch (current_token) {
       case "add":
-        current_instruction += ADD_OP;
+        // Add 0 (because not a multiword) and the ADD op code to our string
+        current_instruction += '0' + ADD_OP;
+        if (infile >> reg_1 >> reg_2) {
+          current_instruction = add_register_value(reg_1, current_instruction);
+          current_instruction = add_register_value(reg_2, current_instruction);
+        }
+        // print out an error if it reachs EOF without 2 reg values
+        else {
+          std::cout << "Error: add instruction did not contain 2 register arguemnents." << '\n';
+        }
       break;
 
       case "sub":
         current_instruction += SUB_OP;
+        // Add 0 (because not a multiword) and the SUB op code to our string
+        current_instruction += '0' + SUB_OP;
+        if (infile >> reg_1 >> reg_2) {
+          current_instruction = add_register_value(reg_1, current_instruction);
+          current_instruction = add_register_value(reg_2, current_instruction);
+        }
+        // print out an error if it reachs EOF without 2 reg values
+        else {
+          std::cout << "Error: sub instruction did not contain 2 register arguemnents." << '\n';
+        }
       break;
 
       case "addi":
@@ -186,167 +206,169 @@ void firstRead(ifstream input_file, fstream output_file)
   }
 }
 
-void add_register_value(string reg, string ins){
+string add_register_value(string reg, string ins){
   switch (reg)
   {
     case "$r0":
       ins += R0_VALUE;
-      return;
     break;
 
     case "$r1":
       ins += R1_VALUE;
-      return;
     break;
 
     case "$r2":
       ins += R2_VALUE;
-      return;
     break;
 
     case "$r3":
       ins += R3_VALUE;
-      return;
     break;
 
     case "$r4":
       ins += R4_VALUE;
-      return;
     break;
 
     case "$r5":
       ins += R5_VALUE;
-      return;
     break;
 
     case "$r6":
       ins += R6_VALUE;
-      return;
     break;
 
     case "$r7":
       ins += R7_VALUE;
-      return;
     break;
 
     case "$r8":
       ins += R8_VALUE;
-      return;
     break;
 
     case "$r9":
       ins += R9_VALUE;
-      return;
     break;
 
     case "$r10":
       ins += R10_VALUE;
-      return;
     break;
 
     case "$r11":
       ins += R11_VALUE;
-      return;
     break;
 
     case "$r12":
       ins += R12_VALUE;
-      return;
     break;
 
     case "$r13":
       ins += R13_VALUE;
-      return;
     break;
 
     case "$r14":
       ins += R14_VALUE;
-      return;
     break;
 
     case "$r15":
       ins += R15_VALUE;
-      return;
     break;
 
     case "$r16":
       ins += R16_VALUE;
-      return;
     break;
 
     case "$r17":
       ins += R17_VALUE;
-      return;
     break;
 
     case "$r18":
       ins += R18_VALUE;
-      return;
     break;
 
     case "$r19":
       ins += R19_VALUE;
-      return;
     break;
 
     case "$r20":
       ins += R20_VALUE;
-      return;
     break;
 
     case "$r21":
       ins += R21_VALUE;
-      return;
     break;
 
     case "$r22":
       ins += R22_VALUE;
-      return;
     break;
 
     case "$r23":
       ins += R23_VALUE;
-      return;
     break;
 
     case "$r24":
       ins += R24_VALUE;
-      return;
     break;
 
     case "$r25":
       ins += R25_VALUE;
-      return;
     break;
 
     case "$r26":
       ins += R26_VALUE;
-      return;
     break;
 
     case "$r27":
       ins += R27_VALUE;
-      return;
     break;
 
     case "$lr0":
       ins += LR0_VALUE;
-      return;
     break;
 
     case "$lr1":
       ins += LR1_VALUE;
-      return;
     break;
 
     case "$lr2":
       ins += LR2_VALUE;
-      return;
     break;
 
     case "$lr3":
       ins += LR3_VALUE;
-      return;
+    break;
+
+    default:
+      std::cout << "Incorrect register name. " <<  reg << " is not a register name." << '\n';
     break;
   }
+
+  return ins;
+}
+
+string get_binary_string_from_hex_string (string sHex)
+{
+  string sReturn = "";
+  for (int i = 0; i < sHex.length (); ++i)
+  {
+    switch (sHex [i])
+    {
+      case '0': sReturn.append ("0000"); break;
+      case '1': sReturn.append ("0001"); break;
+      case '2': sReturn.append ("0010"); break;
+      case '3': sReturn.append ("0011"); break;
+      case '4': sReturn.append ("0100"); break;
+      case '5': sReturn.append ("0101"); break;
+      case '6': sReturn.append ("0110"); break;
+      case '7': sReturn.append ("0111"); break;
+      case '8': sReturn.append ("1000"); break;
+      case '9': sReturn.append ("1001"); break;
+      case 'a': sReturn.append ("1010"); break;
+      case 'b': sReturn.append ("1011"); break;
+      case 'c': sReturn.append ("1100"); break;
+      case 'd': sReturn.append ("1101"); break;
+      case 'e': sReturn.append ("1110"); break;
+      case 'f': sReturn.append ("1111"); break;
+    }
+  }
+  return sReturn;
 }
