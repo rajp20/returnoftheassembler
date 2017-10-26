@@ -10,8 +10,8 @@ void firstPass(string input_file, map<string, int>& labelMap);
 bool isLabel(string line);
 void secondPass(string input_file, map<string, int> labelMap);
 void addLineToCOE(ofstream& out_file, string lineToAdd);
-string getBinaryOfOpCode(string opCode);
-string getBinaryOfOp(string op);
+string getBinaryOfAssemblyIns(string assemblyInstruction);
+string getBinaryOfRegisterOrHex(string arg, map<string, int> labelMap);
 
 
 string add_register_value(string reg, string ins);
@@ -172,108 +172,237 @@ void secondPass(string input_file, map<string, int> labelMap) {
 }
 
 /*
- * Returns the binary of the op code.
+ * Returns the binary opCODE for the associated assembly instruction
  */
-string getBinaryOfOpCode(string opCode) {
-  switch (current_token) {
+string getBinaryOfAssemblyIns(string assemblyInstruction) {
+  switch (assemblyInstruction) {
     case "add":
-      // Add 0 (because not a multiword) and the ADD op code to our string
-      current_instruction += '0' + ADD_OP;
-        if (infile >> reg_1 >> reg_2) {
-          current_instruction = add_register_value(reg_1, current_instruction);
-          current_instruction = add_register_value(reg_2, current_instruction);
-        }
-        // print out an error if it reachs EOF without 2 reg values
-        else {
-          std::cout << "Error: add instruction did not contain 2 register arguemnents." << '\n';
-        }
-      break;
+      return ADD_OP;
+    break;
 
-      case "sub":
-        current_instruction += SUB_OP;
-        // Add 0 (because not a multiword) and the SUB op code to our string
-        current_instruction += '0' + SUB_OP;
-        if (infile >> reg_1 >> reg_2) {
-          current_instruction = add_register_value(reg_1, current_instruction);
-          current_instruction = add_register_value(reg_2, current_instruction);
-        }
-        // print out an error if it reachs EOF without 2 reg values
-        else {
-          std::cout << "Error: sub instruction did not contain 2 register arguemnents." << '\n';
-        }
-      break;
+    case "sub":
+      return SUB_OP;
+    break;
 
-      case "addi":
-        current_instruction += ADDI_OP;
-      break;
+    case "addi":
+      return ADDI_OP;
+    break;
 
-      case "shlli":
-        current_instruction += SHLLI_OP;
-      break;
+    case "shlli":
+      return SHLLI_OP;
+    break;
 
-      case "shrli":
-        current_instruction += SHRLI_OP;
-      break;
+    case "shrli":
+      return SHRLI_OP;
+    break;
 
-      case "jump":
-        current_instruction += JUMP_OP;
-      break;
+    case "jump":
+      return JUMP_OP;
+    break;
 
-      case "jumpli":
-        current_instruction += JUMPLI_OP;
-      break;
+    case "jumpli":
+      return JUMPLI_OP;
+    break;
 
-      case "jumpl":
-        current_instruction += JUMPL_OP;
-      break;
+    case "jumpl":
+      return JUMPL_OP;
+    break;
 
-      case "jumpg":
-        current_instruction += JUMPG_OP;
-      break;
+    case "jumpg":
+      return JUMPG_OP;
+    break;
 
-      case "jumpe":
-        current_instruction += JUMPE_OP;
-      break;
+    case "jumpe":
+      return JUMPE_OP;
+    break;
 
-      case "jumpne":
-        current_instruction += JUMPNE_OP;
-      break;
+    case "jumpne":
+      return JUMPNE_OP;
+    break;
 
-      case "cmp":
-        current_instruction += CMP_OP;
-      break;
+    case "cmp":
+      return CMP_OP;
+    break;
 
-      case "ret":
-        current_instruction += RET_OP;
-      break;
+    case "ret":
+      return RET_OP;
+    break;
 
-      case "load":
-        current_instruction += LOAD_OP;
-      break;
+    case "load":
+      return LOAD_OP;
+    break;
 
-      case "loadi":
-        current_instruction += LOADI_OP;
-      break;
+    case "loadi":
+      return LOADI_OP;
+    break;
 
-      case "store":
-        current_instruction += STORE_OP;
-      break;
+    case "store":
+      return STORE_OP;
+    break;
 
-      case "mov":
-        current_instruction += MOV_OP;
-      break;
+    case "mov":
+      return MOV_OP;
+    break;
 
-      default:
-
-      break;
-    }
+    default:
+      std::cout << "Error: Recieved wrong opcode. " <<  opCode << " is not a registered OPCODE." << '\n';
+      return NULL;
+    break;
+  }
 }
 
 /*
  * Returns the binary of the operands.
  */
-string getBinaryOfOp(string op) {
+string getBinaryOfRegisterOrHex(string arg, map<string, int> labelMap) {
 
+  // If the first character of the string is a $, then we know that this string is a register.
+  if (arg[0] == '$') {
+    switch (arg)
+    {
+      case "$r0":
+        return R0_VALUE;
+      break;
+
+      case "$r1":
+        return R1_VALUE;
+      break;
+
+      case "$r2":
+        return R2_VALUE;
+      break;
+
+      case "$r3":
+        return R3_VALUE;
+      break;
+
+      case "$r4":
+        return R4_VALUE;
+      break;
+
+      case "$r5":
+        return R5_VALUE;
+      break;
+
+      case "$r6":
+        return R6_VALUE;
+      break;
+
+      case "$r7":
+        return R7_VALUE;
+      break;
+
+      case "$r8":
+        return R8_VALUE;
+      break;
+
+      case "$r9":
+        return R9_VALUE;
+      break;
+
+      case "$r10":
+        return R10_VALUE;
+      break;
+
+      case "$r11":
+        return R11_VALUE;
+      break;
+
+      case "$r12":
+        return R12_VALUE;
+      break;
+
+      case "$r13":
+        return R13_VALUE;
+      break;
+
+      case "$r14":
+        return R14_VALUE;
+      break;
+
+      case "$r15":
+        return R15_VALUE;
+      break;
+
+      case "$r16":
+        return R16_VALUE;
+      break;
+
+      case "$r17":
+        return R17_VALUE;
+      break;
+
+      case "$r18":
+        return R18_VALUE;
+      break;
+
+      case "$r19":
+        return R19_VALUE;
+      break;
+
+      case "$r20":
+        return R20_VALUE;
+      break;
+
+      case "$r21":
+        return R21_VALUE;
+      break;
+
+      case "$r22":
+        return R22_VALUE;
+      break;
+
+      case "$r23":
+        return R23_VALUE;
+      break;
+
+      case "$r24":
+        return R24_VALUE;
+      break;
+
+      case "$r25":
+        return R25_VALUE;
+      break;
+
+      case "$r26":
+        return R26_VALUE;
+      break;
+
+      case "$r27":
+        return R27_VALUE;
+      break;
+
+      case "$lr0":
+        return LR0_VALUE;
+      break;
+
+      case "$lr1":
+        return LR1_VALUE;
+      break;
+
+      case "$lr2":
+        return LR2_VALUE;
+      break;
+
+      case "$lr3":
+        return LR3_VALUE;
+      break;
+
+      default:
+        std::cout << "Incorrect register name. " <<  reg << " is not a register name." << '\n';
+        return NULL;
+      break;
+    }
+  }
+  // If the string starts with 0x then we know that this is a hexidecimal value that needs to be
+  // converted to binary.
+  else  if (arg[0] == '0' && arg[1] == 'x') {
+    return get_binary_string_from_hex_string(arg);
+  }
+  // If this is not a hex value or register, then we know that it is a label
+  else {
+    return labelMap[arg];
+  }
 }
 
 /*
@@ -285,272 +414,31 @@ void addLineToCOE(ofstream& out_file, string lineToAdd) {
   }
 }
 
-  // string current_instruction;
-  // string current_token;
-  // string reg_1;
-  // string reg_2;
 
-  // // keep reading in data if there is still data to be read
-  // while (infile >> current_token)
-  // {
-  //   switch (current_token) {
-  //     case "add":
-  //       // Add 0 (because not a multiword) and the ADD op code to our string
-  //       current_instruction += '0' + ADD_OP;
-  //       if (infile >> reg_1 >> reg_2) {
-  //         current_instruction = add_register_value(reg_1, current_instruction);
-  //         current_instruction = add_register_value(reg_2, current_instruction);
-  //       }
-  //       // print out an error if it reachs EOF without 2 reg values
-  //       else {
-  //         std::cout << "Error: add instruction did not contain 2 register arguemnents." << '\n';
-  //       }
-  //     break;
-
-  //     case "sub":
-  //       current_instruction += SUB_OP;
-  //       // Add 0 (because not a multiword) and the SUB op code to our string
-  //       current_instruction += '0' + SUB_OP;
-  //       if (infile >> reg_1 >> reg_2) {
-  //         current_instruction = add_register_value(reg_1, current_instruction);
-  //         current_instruction = add_register_value(reg_2, current_instruction);
-  //       }
-  //       // print out an error if it reachs EOF without 2 reg values
-  //       else {
-  //         std::cout << "Error: sub instruction did not contain 2 register arguemnents." << '\n';
-  //       }
-  //     break;
-
-  //     case "addi":
-  //       current_instruction += ADDI_OP;
-  //     break;
-
-  //     case "shlli":
-  //       current_instruction += SHLLI_OP;
-  //     break;
-
-  //     case "shrli":
-  //       current_instruction += SHRLI_OP;
-  //     break;
-
-  //     case "jump":
-  //       current_instruction += JUMP_OP;
-  //     break;
-
-  //     case "jumpli":
-  //       current_instruction += JUMPLI_OP;
-  //     break;
-
-  //     case "jumpl":
-  //       current_instruction += JUMPL_OP;
-  //     break;
-
-  //     case "jumpg":
-  //       current_instruction += JUMPG_OP;
-  //     break;
-
-  //     case "jumpe":
-  //       current_instruction += JUMPE_OP;
-  //     break;
-
-  //     case "jumpne":
-  //       current_instruction += JUMPNE_OP;
-  //     break;
-
-  //     case "cmp":
-  //       current_instruction += CMP_OP;
-  //     break;
-
-  //     case "ret":
-  //       current_instruction += RET_OP;
-  //     break;
-
-  //     case "load":
-  //       current_instruction += LOAD_OP;
-  //     break;
-
-  //     case "loadi":
-  //       current_instruction += LOADI_OP;
-  //     break;
-
-  //     case "store":
-  //       current_instruction += STORE_OP;
-  //     break;
-
-  //     case "mov":
-  //       current_instruction += MOV_OP;
-  //     break;
-
-  //     default:
-
-  //     break;
-  //   }
-  //   current_instruction = "";
-  // }
-
-// string add_register_value(string reg, string ins){
-//   switch (reg)
-//   {
-//     case "$r0":
-//       ins += R0_VALUE;
-//     break;
-
-//     case "$r1":
-//       ins += R1_VALUE;
-//     break;
-
-//     case "$r2":
-//       ins += R2_VALUE;
-//     break;
-
-//     case "$r3":
-//       ins += R3_VALUE;
-//     break;
-
-//     case "$r4":
-//       ins += R4_VALUE;
-//     break;
-
-//     case "$r5":
-//       ins += R5_VALUE;
-//     break;
-
-//     case "$r6":
-//       ins += R6_VALUE;
-//     break;
-
-//     case "$r7":
-//       ins += R7_VALUE;
-//     break;
-
-//     case "$r8":
-//       ins += R8_VALUE;
-//     break;
-
-//     case "$r9":
-//       ins += R9_VALUE;
-//     break;
-
-//     case "$r10":
-//       ins += R10_VALUE;
-//     break;
-
-//     case "$r11":
-//       ins += R11_VALUE;
-//     break;
-
-//     case "$r12":
-//       ins += R12_VALUE;
-//     break;
-
-//     case "$r13":
-//       ins += R13_VALUE;
-//     break;
-
-//     case "$r14":
-//       ins += R14_VALUE;
-//     break;
-
-//     case "$r15":
-//       ins += R15_VALUE;
-//     break;
-
-//     case "$r16":
-//       ins += R16_VALUE;
-//     break;
-
-//     case "$r17":
-//       ins += R17_VALUE;
-//     break;
-
-//     case "$r18":
-//       ins += R18_VALUE;
-//     break;
-
-//     case "$r19":
-//       ins += R19_VALUE;
-//     break;
-
-//     case "$r20":
-//       ins += R20_VALUE;
-//     break;
-
-//     case "$r21":
-//       ins += R21_VALUE;
-//     break;
-
-//     case "$r22":
-//       ins += R22_VALUE;
-//     break;
-
-//     case "$r23":
-//       ins += R23_VALUE;
-//     break;
-
-//     case "$r24":
-//       ins += R24_VALUE;
-//     break;
-
-//     case "$r25":
-//       ins += R25_VALUE;
-//     break;
-
-//     case "$r26":
-//       ins += R26_VALUE;
-//     break;
-
-//     case "$r27":
-//       ins += R27_VALUE;
-//     break;
-
-//     case "$lr0":
-//       ins += LR0_VALUE;
-//     break;
-
-//     case "$lr1":
-//       ins += LR1_VALUE;
-//     break;
-
-//     case "$lr2":
-//       ins += LR2_VALUE;
-//     break;
-
-//     case "$lr3":
-//       ins += LR3_VALUE;
-//     break;
-
-//     default:
-//       std::cout << "Incorrect register name. " <<  reg << " is not a register name." << '\n';
-//     break;
-//   }
-
-//   return ins;
-// }
-
-// string get_binary_string_from_hex_string (string sHex)
-// {
-//   string sReturn = "";
-//   for (int i = 0; i < sHex.length (); ++i)
-//   {
-//     switch (sHex [i])
-//     {
-//       case '0': sReturn.append ("0000"); break;
-//       case '1': sReturn.append ("0001"); break;
-//       case '2': sReturn.append ("0010"); break;
-//       case '3': sReturn.append ("0011"); break;
-//       case '4': sReturn.append ("0100"); break;
-//       case '5': sReturn.append ("0101"); break;
-//       case '6': sReturn.append ("0110"); break;
-//       case '7': sReturn.append ("0111"); break;
-//       case '8': sReturn.append ("1000"); break;
-//       case '9': sReturn.append ("1001"); break;
-//       case 'a': sReturn.append ("1010"); break;
-//       case 'b': sReturn.append ("1011"); break;
-//       case 'c': sReturn.append ("1100"); break;
-//       case 'd': sReturn.append ("1101"); break;
-//       case 'e': sReturn.append ("1110"); break;
-//       case 'f': sReturn.append ("1111"); break;
-//     }
-//   }
-//   return sReturn;
-// }
+string get_binary_string_from_hex_string (string sHex)
+{
+  string sReturn = "";
+  for (int i = 0; i < sHex.length (); ++i)
+  {
+    switch (sHex [i])
+    {
+      case '0': sReturn.append ("0000"); break;
+      case '1': sReturn.append ("0001"); break;
+      case '2': sReturn.append ("0010"); break;
+      case '3': sReturn.append ("0011"); break;
+      case '4': sReturn.append ("0100"); break;
+      case '5': sReturn.append ("0101"); break;
+      case '6': sReturn.append ("0110"); break;
+      case '7': sReturn.append ("0111"); break;
+      case '8': sReturn.append ("1000"); break;
+      case '9': sReturn.append ("1001"); break;
+      case 'a': sReturn.append ("1010"); break;
+      case 'b': sReturn.append ("1011"); break;
+      case 'c': sReturn.append ("1100"); break;
+      case 'd': sReturn.append ("1101"); break;
+      case 'e': sReturn.append ("1110"); break;
+      case 'f': sReturn.append ("1111"); break;
+    }
+  }
+  return sReturn;
+}
