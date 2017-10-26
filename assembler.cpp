@@ -1,13 +1,19 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include <algorithm>
+#include <vector>
 #include <iostream>
 using namespace std;
 
 void firstPass(string input_file, map<string, int>& labelMap);
 bool isLabel(string line);
-void secondRead(string fileName);
-void saveToCOE(string fileName);
+void secondPass(string input_file, map<string, int> labelMap);
+void addLineToCOE(ofstream& out_file, string lineToAdd);
+string getBinaryOfOpCode(string opCode);
+string getBinaryOfOp(string op);
+
+
 string add_register_value(string reg, string ins);
 
 // All of the binary opcodes associated with their instruction.
@@ -88,10 +94,7 @@ int main(int argv, char** argc) {
 
   map<string, int> labelMap;
   firstPass(input_file, labelMap);
-
-  for (auto it = labelMap.cbegin(); it != labelMap.cend(); ++it) {
-    cout << it->first << "\t" << it->second << endl;
-  }
+  secondPass(input_file, labelMap);
 
   return 0;
 }
@@ -109,8 +112,8 @@ void firstPass(string input_file, map<string, int>& labelMap)
   inFile.open(input_file);
   if (inFile.is_open()) {
     while (getline(inFile, line)) {
+      line.erase(remove(line.begin(), line.end(), ' '), line.end());
       if (isLabel(line)) {
-        cout << line << endl;
         // Remove the last char in the string
         string label = line.substr(0, line.size() - 1);
         labelMap[label] = index;
@@ -129,6 +132,34 @@ void firstPass(string input_file, map<string, int>& labelMap)
 bool isLabel(string line) {
   char endOfLine = line[line.length() - 1];
   return endOfLine == ':';
+}
+
+/*
+ * Generates output binary string.
+ */
+void secondPass(string input_file, map<string, int> labelMap) {
+  string line;
+  int index;
+  ifstream inFile;
+  inFile.open(input_file);
+  if (inFile.is_open()) {
+    while (getine(inFile, line)) {
+      line.erase(remove(line.begin(), line.end(), '\t'), line.end());
+      if (!isLabel(line)) {
+        vector<string> tokens;
+        split(tokens, line, is_any_of(" "));
+
+      }
+    }
+  }
+  inFile.close();
+}
+
+/*
+ * Helper function. Adds one line to the output coe file.
+ */
+void addLineToCOE(ofstream& out_file, string lineToAdd) {
+
 }
 
   // string current_instruction;
