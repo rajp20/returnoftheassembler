@@ -121,8 +121,8 @@ void firstPass(string input_file, map<string, int>& labelMap)
         index++;
       }
     }
+    inFile.close();
   }
-  inFile.close();
 }
 
 /*
@@ -140,26 +140,149 @@ bool isLabel(string line) {
 void secondPass(string input_file, map<string, int> labelMap) {
   string line;
   int index;
+
+  // Input file
   ifstream inFile;
   inFile.open(input_file);
+
+  // Output file
+  string out_file = input_file.substr(0, line.size() - 4) + ".coe";
+  ofstream outFile(out_file);
+
   if (inFile.is_open()) {
     while (getine(inFile, line)) {
       line.erase(remove(line.begin(), line.end(), '\t'), line.end());
       if (!isLabel(line)) {
+        string binaryCode;
         vector<string> tokens;
         split(tokens, line, is_any_of(" "));
-
+        binaryCode += getBinaryOfOpCode(tokens[0]);
+        binaryCode += getBinaryOfOp(token[1]);
+        if (vector.size() > 2) {
+          binaryCode += getBinaryOfOp(token[2]);
+        }
+        addLineToCOE(outFile, binaryCode);
       }
     }
+    if (outFile.is_open()) {
+      outFile.close();
+    }
+    inFile.close();
   }
-  inFile.close();
+}
+
+/*
+ * Returns the binary of the op code.
+ */
+string getBinaryOfOpCode(string opCode) {
+  switch (current_token) {
+    case "add":
+      // Add 0 (because not a multiword) and the ADD op code to our string
+      current_instruction += '0' + ADD_OP;
+        if (infile >> reg_1 >> reg_2) {
+          current_instruction = add_register_value(reg_1, current_instruction);
+          current_instruction = add_register_value(reg_2, current_instruction);
+        }
+        // print out an error if it reachs EOF without 2 reg values
+        else {
+          std::cout << "Error: add instruction did not contain 2 register arguemnents." << '\n';
+        }
+      break;
+
+      case "sub":
+        current_instruction += SUB_OP;
+        // Add 0 (because not a multiword) and the SUB op code to our string
+        current_instruction += '0' + SUB_OP;
+        if (infile >> reg_1 >> reg_2) {
+          current_instruction = add_register_value(reg_1, current_instruction);
+          current_instruction = add_register_value(reg_2, current_instruction);
+        }
+        // print out an error if it reachs EOF without 2 reg values
+        else {
+          std::cout << "Error: sub instruction did not contain 2 register arguemnents." << '\n';
+        }
+      break;
+
+      case "addi":
+        current_instruction += ADDI_OP;
+      break;
+
+      case "shlli":
+        current_instruction += SHLLI_OP;
+      break;
+
+      case "shrli":
+        current_instruction += SHRLI_OP;
+      break;
+
+      case "jump":
+        current_instruction += JUMP_OP;
+      break;
+
+      case "jumpli":
+        current_instruction += JUMPLI_OP;
+      break;
+
+      case "jumpl":
+        current_instruction += JUMPL_OP;
+      break;
+
+      case "jumpg":
+        current_instruction += JUMPG_OP;
+      break;
+
+      case "jumpe":
+        current_instruction += JUMPE_OP;
+      break;
+
+      case "jumpne":
+        current_instruction += JUMPNE_OP;
+      break;
+
+      case "cmp":
+        current_instruction += CMP_OP;
+      break;
+
+      case "ret":
+        current_instruction += RET_OP;
+      break;
+
+      case "load":
+        current_instruction += LOAD_OP;
+      break;
+
+      case "loadi":
+        current_instruction += LOADI_OP;
+      break;
+
+      case "store":
+        current_instruction += STORE_OP;
+      break;
+
+      case "mov":
+        current_instruction += MOV_OP;
+      break;
+
+      default:
+
+      break;
+    }
+}
+
+/*
+ * Returns the binary of the operands.
+ */
+string getBinaryOfOp(string op) {
+
 }
 
 /*
  * Helper function. Adds one line to the output coe file.
  */
 void addLineToCOE(ofstream& out_file, string lineToAdd) {
-
+  if (out_file.is_open()) {
+    out_file << lineToAdd << "\n";
+  }
 }
 
   // string current_instruction;
