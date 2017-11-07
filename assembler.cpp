@@ -12,7 +12,7 @@ using namespace std;
 void firstPass(string input_file, map<string, int>& labelMap);
 bool isLabel(string line);
 void secondPass(string input_file, map<string, int> labelMap);
-void addLineToCOE(ofstream& out_file, string lineToAdd);
+void addCodeToCOE(string linesToAdd, string out_file);
 string getBinaryRegDecLabel(string arg, map<string, int> labelMap, int currentIndex);
 
 map<string, string> opCodeMapToBinary;
@@ -147,9 +147,9 @@ void secondPass(string input_file, map<string, int> labelMap) {
   ifstream inFile;
   inFile.open(input_file);
 
-  // Output file
-  string out_file = input_file.substr(0, input_file.size() - 4) + ".coe";
-  ofstream outFile(out_file);
+  // // Output file
+
+  string output = "";
 
   if (inFile.is_open()) {
     while (getline(inFile, line)) {
@@ -178,13 +178,13 @@ void secondPass(string input_file, map<string, int> labelMap) {
         if (tokens.size() > 2) {
           binaryCode += getBinaryRegDecLabel(tokens[2], labelMap, index + 1);
         }
-        addLineToCOE(outFile, binaryCode);
+	binaryCode += ",\n";
+	output += binaryCode;
         index++;
       }
     }
-    if (outFile.is_open()) {
-      outFile.close();
-    }
+    string out_file = input_file.substr(0, input_file.size() - 4) + ".coe";
+    addCodeToCOE(output, out_file);
     inFile.close();
   }
 }
@@ -220,8 +220,18 @@ string getBinaryRegDecLabel(string arg, map<string, int> labelMap, int currentIn
 /*
  * Helper function. Adds one line to the output coe file.
  */
-void addLineToCOE(ofstream& out_file, string lineToAdd) {
-  if (out_file.is_open()) {
-    out_file << lineToAdd << "\n";
-  }
+void addCodeToCOE(string linesToAdd, string out_file) {
+
+  // Copy master coe to new file
+  ifstream src("text_glyph_code.coe", ios::binary);
+  ofstream dst(out_file, ios::binary);
+  dst << src.rdbuf();
+  src.close();
+  dst.close();
+  
+  ofstream outFile;
+  outFile.open(out_file, ios::app);
+  linesToAdd[linesToAdd.length() - 2] = ';';
+  outFile << linesToAdd;
+  outFile.close();
 }
