@@ -163,17 +163,18 @@ void secondPass(string input_file, map<string, int> labelMap) {
 
         string binaryCode;
 
-        // This is temp until we figure out what we're going to use the
-        // extra bit for since we're modifying our assembly language. 
-        if (tokens.size() > 2) {
-          binaryCode += "0";
-        }
-
         // Get the op code binary string.
         binaryCode += opCodeMapToBinary[tokens[0]];
 
         // Get the binary string of reg/decimal/lable.
-        binaryCode += getBinaryRegDecLabel(tokens[1], labelMap, index + 1);
+        string firstArg = getBinaryRegDecLabel(tokens[1], labelMap, index + 1);
+
+        // Only set the top bit if it's an immediate.
+        if (firstArg.length() < 6) {
+          binaryCode += "0";
+        }
+        binaryCode += firstArg;
+
         if (tokens.size() > 2) {
           binaryCode += getBinaryRegDecLabel(tokens[2], labelMap, index + 1);
         }
@@ -206,10 +207,10 @@ string getBinaryRegDecLabel(string arg, map<string, int> labelMap, int currentIn
   // If the string is a decimal.
   else {
     int value = stoi(arg);
-    if (!(value > 32)) {
-      return bitset<5>(value).to_string();
+    if (value >= -32 && value <= 31) {
+      return bitset<6>(value).to_string();
     } else {
-      cout << "Immediate value is more than 32, this will cause error in the core" << endl;
+      cout << "Immediate value needs to be greater than -32 and less than 31, this will cause error in the core" << endl;
       return "1";
     }
   }
