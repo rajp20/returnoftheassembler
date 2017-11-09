@@ -10,7 +10,7 @@ Start:
     shlli 10, $r7	
 Loop:
     addi 1, $r6
-    cpm $r6, $r7
+    cmp $r6, $r7
     jumpne Loop
     store $r5, $lr0
     addi 1, $r5
