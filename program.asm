@@ -6,8 +6,8 @@ Start:
     addi 1, $r5
     loadi 0, $lr0
     loadi 0, $r6
-    loadi 8, $r7
-    shlli 5, $r7	
+    loadi 7, $r7
+    shlli 10, $r7	
 Loop:
     addi 1, $r6
     cpm $r6, $r7
