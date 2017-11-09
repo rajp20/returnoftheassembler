@@ -2,7 +2,7 @@ Start:
     loadi 0, $r1
     loadi 25, $r2
     loadi 4, $r5
-    shrli 3, $r5
+    shlli 4, $r5
     addi 1, $r5
     loadi 0, $lr0
 Loop:
