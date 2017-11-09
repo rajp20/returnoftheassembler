@@ -7,7 +7,7 @@ Start:
     loadi 0, $lr0
     loadi 0, $r6
     loadi 7, $r7
-    shlli 10, $r7	
+    shlli 13, $r7	
 Loop:
     addi 1, $r6
     cmp $r6, $r7
