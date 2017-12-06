@@ -82,11 +82,12 @@ int main(int argv, char** argc) {
   regMapToBinary["$r20"] = "10011";
   regMapToBinary["$r21"] = "10100";
   regMapToBinary["$r22"] = "10101";
-  regMapToBinary["$r23"] = "10110";
-  regMapToBinary["$r24"] = "10111";
-  regMapToBinary["$r25"] = "11000";
-  regMapToBinary["$r26"] = "11001";
-  regMapToBinary["$r27"] = "11010";
+  
+  regMapToBinary["$x"] = "10110";
+  regMapToBinary["$y"] = "10111";
+  regMapToBinary["$data_ready"] = "11000";
+  regMapToBinary["$left_click"] = "11001";
+  regMapToBinary["$right_click"] = "11010";
 
   // All of the registers with their associated binary value. $lr0-$lr3
   regMapToBinary["$lr0"] = "11100";
