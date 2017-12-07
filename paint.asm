@@ -22,7 +22,8 @@ ProcessMouse:
 	(y_v)-> $(reg_b)
 	(x_s)-> $(reg_c)
 	(y_s)-> $(reg_d)
-	(leftClick)->(reg_e) 
+	(leftClick)->(reg_e)
+	(rightClick)->(reg_f) 
 	}
 	//convert x_v & y_v to pixel coordinate adjustment
 	shrli 4 $(register_a)
@@ -98,7 +99,7 @@ DrawPosYDone:				//positive X
 	addi 1 $(current_x_reg)
 	addi -1 (reg_a)
 	store $(selected_color_reg)	$(current_address)
-	//update address with new x,y
+	//update address with new x,y SPECIAL INSTRUCTION?
 	jump DrawYDone
 
 DrawDone:
@@ -118,7 +119,7 @@ DrawNegXOnly:						//neg x, pos y
 	addi 1 $(current_y_reg)
 	addi -1 (reg_b)
 	store $(selected_color_reg)	$(current_address)
-	//update address with new x,y
+	//update address with new x,y SPECIAL INSTRUCTION?
 	jump DrawNegXOnly
 
 DrawBothNeg:
@@ -131,7 +132,7 @@ DrawBothNeg:
 	addi -1 $(current_y_reg)
 	addi -1 (reg_b)
 	store $(selected_color_reg)	$(current_address)
-	//update address with new x,y
+	//update address with new x,y SPECIAL INSTRUCTION?
 	jump DrawBothPositive
 
 DrawNegXDone:						//Negative Y
@@ -140,7 +141,7 @@ DrawNegXDone:						//Negative Y
 	addi -1 $(current_y_reg)
 	addi -1 (reg_b)
 	store $(selected_color_reg)	$(current_address)
-	//update address with new x,y
+	//update address with new x,y SPECIAL INSTRUCTION?
 	jump DrawXDone	
 
 DrawNegYDone:						//Negative X
@@ -149,7 +150,7 @@ DrawNegYDone:						//Negative X
 	addi -1 $(current_x_reg)
 	addi -1 (reg_a)
 	store $(selected_color_reg)	$(current_address)
-	//update address with new x,y
+	//update address with new x,y SPECIAL INSTRUCTION?
 	jump DrawYDone
 
 
@@ -163,7 +164,7 @@ DrawNegYOnly:						//pos x, neg y
 	addi -1 $(current_y_reg)
 	addi -1 (reg_b)
 	store $(selected_color_reg)	$(current_address)
-	//update address with new x,y
+	//update address with new x,y SPECIAL INSTRUCTION?
 	jump DrawNegYOnly
 
 
