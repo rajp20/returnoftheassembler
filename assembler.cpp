@@ -78,10 +78,9 @@ int main(int argv, char** argc) {
   regMapToBinary["$r15"] = "01111";
   regMapToBinary["$r16"] = "10000";
   regMapToBinary["$r17"] = "10001";
-  regMapToBinary["$r18"] = "10001";
-  regMapToBinary["$r19"] = "10010";
-  regMapToBinary["$r20"] = "10011";
-  regMapToBinary["$r21"] = "10100";
+  regMapToBinary["$r18"] = "10010";
+  regMapToBinary["$r19"] = "10011";
+  regMapToBinary["$r20"] = "10100";
   
   regMapToBinary["$read_data"] = "10101";
   
@@ -92,10 +91,11 @@ int main(int argv, char** argc) {
   regMapToBinary["$right_click"] = "11010";
 
   // All of the registers with their associated binary value. $lr0-$lr3
-  regMapToBinary["$lr0"] = "11100";
-  regMapToBinary["$lr1"] = "11101";
-  regMapToBinary["$lr2"] = "11110";
-  regMapToBinary["$lr3"] = "11111";
+  regMapToBinary["$lr0"] = "11011";
+  regMapToBinary["$lr1"] = "11100";
+  regMapToBinary["$lr2"] = "11101";
+  regMapToBinary["$lr3"] = "11110";
+  regMapToBinary["$lr4"] = "11111";
 
   createColorPallet();
  
