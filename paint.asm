@@ -134,10 +134,55 @@ ExtractAddr:
 Draw:
     loadi 21 $r17
 	cmp	$r17 $r5
-	jumpl PickColor
+	jumpl Erase
+	jump RemoveCursor
 	mov $r11 $r16
+	store $r15 $lr4
+	store $r14 $lr3
+	store $r13 $lr2
+	store $r12 $lr1
+	store $r11 $lr0
 	indraw $r16 $r5
 	store $r16 $lr0
+AddedThis:
+	mov $r6 $r7
+	addi -1 $r7
+	mov $r5 $r8
+	addi 1 $r8
+	mov $r6 $r9
+	addi 1 $r9
+	mov $r5 $r10
+	addi -1 $r10
+	addr $r5 $r6
+	mov $lr4 $lr0
+	addr $r5 $r7
+	mov $lr4 $lr1	
+	addr $r8 $r6
+	mov $lr4 $lr2
+	addr $r5 $r9
+	mov $lr4 $lr3
+	addr $r10 $r6	
+	load $lr0 $r11
+	mov $r11 $r16
+	incrsr $r16 $r5
+	store $r16 $lr0
+	load $lr1 $r12
+	mov $r12 $r16
+	incrsr $r16 $r5
+	store $r16 $lr1
+	load $lr2 $r13
+	mov $r13 $r16
+	incrsr $r16 $r8
+	store $r16 $lr2
+	load $lr3 $r14
+	mov $r14 $r16
+	incrsr $r16 $r5	
+	store $r16 $lr3
+	load $lr4 $r15
+	mov $r15 $r16
+	incrsr $r16 $r10
+	store $r16 $lr4
+EndofThis:
 	mov $x $r3
 	mov $y $r4
 	shrli 2 $r3
@@ -182,6 +227,43 @@ DontFixAddY:
 	indraw $r11 $r5
 	move $r16 $r11
 	store $rll $lr4
+	mov $r6 $r7
+	addi -1 $r7
+	mov $r5 $r8
+	addi 1 $r8
+	mov $r6 $r9
+	addi 1 $r9
+	mov $r5 $r10
+	addi -1 $r10
+	addr $r5 $r6
+	mov $lr4 $lr0
+	addr $r5 $r7
+	mov $lr4 $lr1	
+	addr $r8 $r6
+	mov $lr4 $lr2
+	addr $r5 $r9
+	mov $lr4 $lr3
+	addr $r10 $r6	
+	load $lr0 $r11
+	mov $r11 $r16
+	incrsr $r16 $r5
+	store $r16 $lr0
+	load $lr1 $r12
+	mov $r12 $r16
+	incrsr $r16 $r5
+	store $r16 $lr1
+	load $lr2 $r13
+	mov $r13 $r16
+	incrsr $r16 $r8
+	store $r16 $lr2
+	load $lr3 $r14
+	mov $r14 $r16
+	incrsr $r16 $r5	
+	store $r16 $lr3
+	load $lr4 $r15
+	mov $r15 $r16
+	incrsr $r16 $r10
+	store $r16 $lr4
 	jump IncrementX
 MinusY:
 	addi 1 $r6
@@ -196,6 +278,43 @@ DontFixMinusY:
 	indraw $r11 $r5
 	move $r16 $r11
 	store $rll $lr4
+	mov $r6 $r7
+	addi -1 $r7
+	mov $r5 $r8
+	addi 1 $r8
+	mov $r6 $r9
+	addi 1 $r9
+	mov $r5 $r10
+	addi -1 $r10
+	addr $r5 $r6
+	mov $lr4 $lr0
+	addr $r5 $r7
+	mov $lr4 $lr1	
+	addr $r8 $r6
+	mov $lr4 $lr2
+	addr $r5 $r9
+	mov $lr4 $lr3
+	addr $r10 $r6	
+	load $lr0 $r11
+	mov $r11 $r16
+	incrsr $r16 $r5
+	store $r16 $lr0
+	load $lr1 $r12
+	mov $r12 $r16
+	incrsr $r16 $r5
+	store $r16 $lr1
+	load $lr2 $r13
+	mov $r13 $r16
+	incrsr $r16 $r8
+	store $r16 $lr2
+	load $lr3 $r14
+	mov $r14 $r16
+	incrsr $r16 $r5	
+	store $r16 $lr3
+	load $lr4 $r15
+	mov $r15 $r16
+	incrsr $r16 $r10
+	store $r16 $lr4
 	jump IncrementX
 XDone:
 	cmp $r0 $r4
@@ -215,6 +334,43 @@ YDone:
 	indraw $r11 $r5
 	move $r16 $r11
 	store $rll $lr4
+	mov $r6 $r7
+	addi -1 $r7
+	mov $r5 $r8
+	addi 1 $r8
+	mov $r6 $r9
+	addi 1 $r9
+	mov $r5 $r10
+	addi -1 $r10
+	addr $r5 $r6
+	mov $lr4 $lr0
+	addr $r5 $r7
+	mov $lr4 $lr1	
+	addr $r8 $r6
+	mov $lr4 $lr2
+	addr $r5 $r9
+	mov $lr4 $lr3
+	addr $r10 $r6	
+	load $lr0 $r11
+	mov $r11 $r16
+	incrsr $r16 $r5
+	store $r16 $lr0
+	load $lr1 $r12
+	mov $r12 $r16
+	incrsr $r16 $r5
+	store $r16 $lr1
+	load $lr2 $r13
+	mov $r13 $r16
+	incrsr $r16 $r8
+	store $r16 $lr2
+	load $lr3 $r14
+	mov $r14 $r16
+	incrsr $r16 $r5	
+	store $r16 $lr3
+	load $lr4 $r15
+	mov $r15 $r16
+	incrsr $r16 $r10
+	store $r16 $lr4
 	cmp $r0 $r3
 	jumpne IncrementX
 	mov $r6 $r7
