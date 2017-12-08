@@ -132,13 +132,11 @@ ExtractAddr:
 	mov $lr4 $lr3
 	addr $r10 $r6
 Draw:
-    loadi 20 $r17
+    loadi 21 $r17
 	cmp	$r17 $r5
-	jumpg ContDraw1:
-	jump PickColor
-ContDraw1:
+	jumpl PickColor
 	mov $r11 $r16
-	incrsr $r16 $r5
+	indraw $r16 $r5
 	store $r16 $lr0
 	mov $x $r3
 	mov $y $r4
@@ -159,6 +157,10 @@ IncrementY:
 AddX:
 	addi 1 $r5
 	addi -1 $r3
+	cmp $r1 $r5
+	jumpl IncrementY
+	mov $r1 $r5
+	addi -3 $r5
 	jump IncrementY
 MinusX:
 	addi -1 $r5
@@ -171,18 +173,27 @@ MinusX:
 AddY:
 	addi -1 $r6
 	addi -1 $r4
+	cmp $r0 $r6
+	jumpg DontFixAddY
+	loadi 1 $r6
+DontFixAddY:
 	addr $r5 $r6
 	load $lr4 $rll
-	incrsr $r11 $r5
+	indraw $r11 $r5
 	move $r16 $r11
 	store $rll $lr4
 	jump IncrementX
 MinusY:
 	addi 1 $r6
 	addi 1 $r4
+	cmp $r2 $r6
+	jumpl DontFixMinusY
+	mov $r2 $r6
+	addi -1 $r6
+DontFixMinusY:
 	addr $r5 $r6
 	load $lr4 $rll
-	incrsr $r11 $r5
+	indraw $r11 $r5
 	move $r16 $r11
 	store $rll $lr4
 	jump IncrementX
@@ -201,7 +212,7 @@ XDone:
 YDone:
 	addr $r5 $r6
 	load $lr4 $rll
-	incrsr $r11 $r5
+	indraw $r11 $r5
 	move $r16 $r11
 	store $rll $lr4
 	cmp $r0 $r3
@@ -218,10 +229,5 @@ YDone:
 Erase:
     jump RemoveCursor
 PickColor:
-	store $r15 $lr4
-	store $r14 $lr3
-	store $r13 $lr2
-	store $r12 $lr1
-	store $r11 $lr0
 	setcolr $r11 $r5
-	jump MoveCursor
+	jump RemoveCursor
