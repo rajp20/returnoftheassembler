@@ -53,7 +53,7 @@ int main(int argv, char **argc) {
   opCodeMapToBinary["shlli"] = "00011";
   opCodeMapToBinary["shrli"] = "00100";
   opCodeMapToBinary["jump"] = "00101";
-  opCodeMapToBinary["jumpli"] = "00110";
+  opCodeMapToBinary["addr"] = "00110";
   opCodeMapToBinary["jumpl"] = "00111";
   opCodeMapToBinary["jumpg"] = "01000";
   opCodeMapToBinary["jumpe"] = "01001";
@@ -64,6 +64,9 @@ int main(int argv, char **argc) {
   opCodeMapToBinary["loadi"] = "01110";
   opCodeMapToBinary["store"] = "01111";
   opCodeMapToBinary["mov"] = "10000";
+  opCodeMapToBinary["incrsr"] = "10001";
+  opCodeMapToBinary["indraw"] = "10010";
+  opCodeMapToBinary["inersr"] = "10011";
 
   // All of the registers with their associated binary value. $r0 - $r27
   regMapToBinary["$r0"] = "00000";
@@ -382,6 +385,7 @@ void firstPass(string input_file, map<string, int> &labelMap) {
         // Remove the last char in the string
         string label = line.substr(0, line.size() - 1);
         labelMap[label] = index;
+        cout << "Adding label " << label << " at index " << index << endl;
       } else {
         index++;
       }
@@ -420,6 +424,7 @@ void secondPass(string input_file, map<string, int> labelMap) {
       line.erase(remove(line.begin(), line.end(), ','), line.end());
       if (!isLabel(line)) {
         // Split string in to tokens.
+        cout << "Working on instruction " << line << endl;
         istringstream buf(line);
         istream_iterator<string> beg(buf), end;
         vector<string> tokens(beg, end);
@@ -443,6 +448,7 @@ void secondPass(string input_file, map<string, int> labelMap) {
         }
         binaryCode += ",\n";
         output += binaryCode;
+        cout << binaryCode << endl;
         index++;
       }
     }
@@ -459,10 +465,12 @@ string getBinaryRegDecLabel(string arg, map<string, int> labelMap, int currentIn
 
   // If the first character of the string is a $, then we know that this string is a register.
   if (arg[0] == '$') {
+    cout << "Getting Register " << arg << endl;
     return regMapToBinary[arg];
   }
     // If the argument is in the label map, than arg is label.
   else if (labelMap.count(arg)) {
+    cout << "Label " << arg << endl;
     int labelIndex = labelMap[arg];
     int offset = labelIndex - currentIndex;
     return bitset<11>(offset).to_string();
@@ -471,6 +479,7 @@ string getBinaryRegDecLabel(string arg, map<string, int> labelMap, int currentIn
   else {
     int value = stoi(arg);
     if (value >= -32 && value <= 31) {
+      cout << "Converting value " << value << " to binary " <<  bitset<6>(value).to_string() << endl;
       return bitset<6>(value).to_string();
     } else {
       cout << "Immediate value needs to be greater than -32 and less than 31, this will cause error in the core"

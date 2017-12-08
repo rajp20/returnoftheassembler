@@ -1,10 +1,10 @@
 Start:
-	loadi 0 $r0							
+	loadi 0 $r0		
 	loadi 0 $r5
 	loadi 0 $r6
 	loadi 0 $r1
 	loadi 0 $r2
-	addi 20	$r1
+	addi 20 $r1
 	shlli 3 $r1
 	mov $r1 $r5		
 	shlli 1 $r1
@@ -22,12 +22,12 @@ Start:
 	addi 1 $r9
 	mov $r5 $r10
 	addi -1 $r10	
-	jmp	DrawCursor
+	jump DrawCursor
 Idle:
-	cmp	$0 $read_data
+	cmp $r0 $read_data
 	jumpe Idle
 	jump ProcessMouse
-ProccessMouse:
+ProcessMouse:
 	cmp $r0 $left_click
 	jumpne Draw
 	cmp $r0 $right_click
@@ -56,19 +56,19 @@ DrawCursor:
 	load $lr3 $r14
 	load $lr4 $r15
 	mov $r11 $r16
-	incrsr	$r16 $r5
+	incrsr $r16 $r5
 	store $r16 $lr0
 	mov $r12 $r16
-	incrsr	$r16 $r5
+	incrsr $r16 $r5
 	store $r16 $lr1
 	mov $r13 $r16
-	incrsr	$r16 $r8
+	incrsr $r16 $r8
 	store $r16 $lr2
 	mov $r14 $r16
-	incrsr	$r16 $r5	
+	incrsr $r16 $r5	
 	store $r16 $lr3
 	mov $r15 $r16
-	incrsr	$r16 $r10
+	incrsr $r16 $r10
 	store $r16 $lr4
 	loadi 0 $read_data
 	jump Idle
@@ -89,7 +89,7 @@ MinXSat:
 	jumpl MaxXSat
 	mov $r1 $r5
 	addi -1 $r5
-MaxXsat:
+MaxXSat:
 	cmp $r0 $r6
 	jumpg MinYSat
 	loadi 1 $r6
@@ -98,7 +98,7 @@ MinYSat:
 	jumpl MaxYSat
 	mov $r2 $r6
 	addi -1 $r6
-MaxYsat:
+MaxYSat:
 	mov $r6 $r7
 	addi -1 $r7
 	mov $r5 $r8
@@ -118,8 +118,7 @@ ExtractAddr:
 	addr $r5 $r9
 	mov $lr4 $lr3
 	addr $r10 $r6
-
-
-
-
-	
+Draw:
+    addi 0 $r0
+Erase:
+	addi 0 $r0
