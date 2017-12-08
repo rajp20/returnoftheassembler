@@ -75,9 +75,9 @@ DrawCursor:
 MoveCursor:
 	mov $x $r3
 	mov $y $r4
-	shrli 4 $r3
+	shrli 5 $r3
 	addi 0 $r3
-	shrli 4 $r4
+	shrli 5 $r4
 	addi 0 $r4
 	add $r3 $r5
 	sub $r4 $r6
@@ -119,6 +119,81 @@ ExtractAddr:
 	mov $lr4 $lr3
 	addr $r10 $r6
 Draw:
-    jump MoveCursor
+    loadi 20 $r17
+	cmp	$r17 $r5
+	jumpg ContDraw1:
+	jump PickColor
+ContDraw1:
+	store $r15 $lr4
+	store $r14 $lr3
+	store $r13 $lr2
+	store $r12 $lr1
+	mov $r11 $r16
+	indraw $r16 $r5
+	store $r16 $lr0
+	mov $x $r3
+	mov $y $r4
+	shrli 4 $r3
+	shrli 4 $r4
+IncrementX:
+	cmp $r0 $r3
+	jumpg AddX
+	cmp $r0 $r3
+	jumpl MinusX
+	jump XDone
+IncrementY:
+	cmp $r0 $r4
+	jumpg AddY
+	cmp $r0 $r4
+	jumpl MinusY
+	jump YDone
+AddX:
+	addi 1 $r5
+	addi -1 $r3
+	jump IncrementY
+MinusX:
+	addi -1 $r5
+	addi 1 $r3
+	jump IncrementY
+AddY:
+	addi -1 $r6
+	addi -1 $r4
+	jump IncrementX
+MinusY:
+	addi 1 $r6
+	addi 1 $r4
+	jump IncrementX
+XDone:
+	cmp $r0 $r4
+	jumpne IncrementY
+	mov $r6 $r7
+	addi -1 $r7
+	mov $r5 $r8
+	addi 1 $r8
+	mov $r6 $r9
+	addi 1 $r9
+	mov $r5 $r10
+	addi -1 $r10
+	jump DrawCursor
+YDone:
+	cmp $r0 $r3
+	jumpne IncrementX
+	mov $r6 $r7
+	addi -1 $r7
+	mov $r5 $r8
+	addi 1 $r8
+	mov $r6 $r9
+	addi 1 $r9
+	mov $r5 $r10
+	addi -1 $r10
+	jump DrawCursor
 Erase:
-    jump MoveCursor
+    jump RemoveCursor
+PickColor:
+	store $r15 $lr4
+	store $r14 $lr3
+	store $r13 $lr2
+	store $r12 $lr1
+	store $r11 $lr0
+	setcolr $r11 $r5
+	jump MoveCursor
