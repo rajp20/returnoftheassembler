@@ -180,4 +180,20 @@ Erase:
     jump MoveCursor
 PickColor:
 	setcolr $r11 $r5
+	loadi 2 $r18
+	loadi 18 $r0
+SelectouterLoop:
+	loadi 2 $r17
+SelectinnerLoop:
+	addr $r17 $r18
+	load $lr4 $r7
+	indraw $r7 $r17
+	store $r16 $lr4
+	addi 1 $r17
+	cmp $r0 $r17
+	jumpne SelectinnerLoop
+	addi 1 $r18
+	cmp $r0 $r18
+	jumpne SelectouterLoop
+	loadi 0 $r0
 	jump MoveCursor
