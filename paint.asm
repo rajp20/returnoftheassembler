@@ -8,7 +8,7 @@ Start:
 	shlli 3 $r1
 	mov $r1 $r5		
 	shlli 1 $r1
-	addi -1 $r1						
+	addi -3 $r1						
 	addi 30 $r2
 	shlli 2 $r2
 	mov $r2 $r6
@@ -101,7 +101,7 @@ MinXSat:
 	cmp $r1 $r5
 	jumpl MaxXSat
 	mov $r1 $r5
-	addi -1 $r5
+	addi -3 $r5
 MaxXSat:
 	cmp $r0 $r6
 	jumpg MinYSat
@@ -137,10 +137,6 @@ Draw:
 	jumpg ContDraw1:
 	jump PickColor
 ContDraw1:
-	store $r15 $lr4
-	store $r14 $lr3
-	store $r13 $lr2
-	store $r12 $lr1
 	mov $r11 $r16
 	incrsr $r16 $r5
 	store $r16 $lr0
@@ -167,6 +163,10 @@ AddX:
 MinusX:
 	addi -1 $r5
 	addi 1 $r3
+	loadi 21 $r17
+	cmp $r17 $r5
+	jumpg IncrementY
+	loadi 21 $r5
 	jump IncrementY
 AddY:
 	addi -1 $r6
