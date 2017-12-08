@@ -75,10 +75,23 @@ DrawCursor:
 MoveCursor:
 	mov $x $r3
 	mov $y $r4
-	shrli 5 $r3
-	addi 0 $r3
-	shrli 5 $r4
-	addi 0 $r4
+	shrli 2 $r3
+	shrli 2 $r4
+	loadi 1 $r17
+	cmp $r17 $r3
+    jumpg SkipThresholdX
+	loadi -1 $r17
+	cmp $r17 $r3
+	jump SkipThresholdX
+	loadi 0 $r3
+SkipThresholdX:
+	cmp $r17 $r4
+    jumpl SkipThresholdY
+	loadi 1 $r17
+	cmp $r17 $r4
+	jump SkipThresholdY
+	loadi 0 $r4
+SkipThresholdY:
 	add $r3 $r5
 	sub $r4 $r6
 	cmp $r0 $r5
@@ -129,12 +142,12 @@ ContDraw1:
 	store $r13 $lr2
 	store $r12 $lr1
 	mov $r11 $r16
-	indraw $r16 $r5
+	incrsr $r16 $r5
 	store $r16 $lr0
 	mov $x $r3
 	mov $y $r4
-	shrli 4 $r3
-	shrli 4 $r4
+	shrli 2 $r3
+	shrli 2 $r4
 IncrementX:
 	cmp $r0 $r3
 	jumpg AddX
@@ -158,10 +171,20 @@ MinusX:
 AddY:
 	addi -1 $r6
 	addi -1 $r4
+	addr $r5 $r6
+	load $lr4 $rll
+	incrsr $r11 $r5
+	move $r16 $r11
+	store $rll $lr4
 	jump IncrementX
 MinusY:
 	addi 1 $r6
 	addi 1 $r4
+	addr $r5 $r6
+	load $lr4 $rll
+	incrsr $r11 $r5
+	move $r16 $r11
+	store $rll $lr4
 	jump IncrementX
 XDone:
 	cmp $r0 $r4
@@ -176,6 +199,11 @@ XDone:
 	addi -1 $r10
 	jump DrawCursor
 YDone:
+	addr $r5 $r6
+	load $lr4 $rll
+	incrsr $r11 $r5
+	move $r16 $r11
+	store $rll $lr4
 	cmp $r0 $r3
 	jumpne IncrementX
 	mov $r6 $r7

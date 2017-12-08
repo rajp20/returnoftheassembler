@@ -11,9 +11,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="755d3929-b3c3-4a80-9c55-08023c3f7539" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/assembler.cpp" afterPath="$PROJECT_DIR$/assembler.cpp" />
-    </list>
+    <list default="true" id="755d3929-b3c3-4a80-9c55-08023c3f7539" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -38,8 +36,8 @@
       <file leaf-file-name="assembler.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/assembler.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="609">
-              <caret line="90" column="0" lean-forward="true" selection-start-line="90" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
+            <state relative-caret-position="696">
+              <caret line="93" column="0" lean-forward="true" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -139,12 +137,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1512669259786</updated>
-      <workItem from="1512669262408" duration="13301000" />
+      <workItem from="1512669262408" duration="13883000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13301000" />
+    <option name="totallyTimeSpent" value="13883000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="42" width="3840" height="2118" extended-state="6" />
@@ -190,8 +188,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/assembler.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="609">
-          <caret line="90" column="0" lean-forward="true" selection-start-line="90" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
+        <state relative-caret-position="696">
+          <caret line="93" column="0" lean-forward="true" selection-start-line="93" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
