@@ -88,8 +88,9 @@ int main(int argv, char **argc) {
   regMapToBinary["$r16"] = "10000";
   regMapToBinary["$r17"] = "10001";
   regMapToBinary["$r18"] = "10010";
-  regMapToBinary["$r19"] = "10011";
-  regMapToBinary["$r20"] = "10100";
+
+  regMapToBinary["$x_overflow"] = "10011";
+  regMapToBinary["$y_overflow"] = "10100";
 
   regMapToBinary["$read_data"] = "10101";
 
