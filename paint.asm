@@ -1,170 +1,125 @@
-//initialize program
 Start:
-
-	//load starting cursor (160,120)
-	//read that pixel reg index into register (prev_color)
-	//store cursor color index into that address
-	//store x,y boundary (320, 240)
-
-
-
+	loadi 0 $r0							
+	loadi 0 $r5
+	loadi 0 $r6
+	loadi 0 $r1
+	loadi 0 $r2
+	addi 20	$r1
+	shlli 3 $r1
+	mov $r1 $r5		
+	shlli 1 $r1
+	addi -1 $r1						
+	addi 30 $r2
+	shlli 2 $r2
+	mov $r2 $r6
+	shlli 1 $r1
+	addi -1 $r1
+	mov $r6 $r7
+	addi -1 $r7
+	mov $r5 $r8
+	addi 1 $r8
+	mov $r6 $r9
+	addi 1 $r9
+	mov $r5 $r10
+	addi -1 $r10	
+	jmp	DrawCursor
 Idle:
-	//check status of io reg
-	cmp	$0 $status reg
+	cmp	$0 $read_data
 	jumpe Idle
 	jump ProcessMouse
-
-
-ProcessMouse:
-	//grab mouse data into registers
-	grabMouse (special instruction){
-	(x_v)-> $(reg_a)
-	(y_v)-> $(reg_b)
-	(x_s)-> $(reg_c)
-	(y_s)-> $(reg_d)
-	(leftClick)->(reg_e)
-	(rightClick)->(reg_f) 
-	}
-	//convert x_v & y_v to pixel coordinate adjustment
-	shrli 4 $(register_a)
-	addi 1 $(register_a)
-	shrli 4 $(register_b)
-	addi 1 $(register_b)
-	//if left button clicked jmp to Draw
-	cmp $0 $(register_e)
+ProccessMouse:
+	cmp $r0 $left_click
 	jumpne Draw
-	jump MoveCursor
-
-MoveCursor:
-	//draw in previous color
-	store $(prev_color index) $(prev_address)
-
-	//move cursor
-	cmp $0 $(reg_c)
-	jmpne MoveNegX
-	add $(reg_a) $(current_x_reg)	//positive x_v
-	cmp $0 $(reg_d)
-	jumpn MoveNegY
-	add $(reg_b) $(current_y_reg)	//positive y_v
+	cmp $r0 $right_click
+	jumpne Erase
+	jump RemovCursor
+RemovCursor:
+	store $r11 $lr0
+	store $r12 $lr1
+	store $r13 $lr2
+	store $r14 $lr3
+	store $r15 $lr4
+	jump movCursor
+DrawCursor:
+	addr $r5 $r6
+	mov $lr4 $lr0
+	addr $r5 $r7
+	mov $lr4 $lr1	
+	addr $r8 $r6
+	mov $lr4 $lr2
+	addr $r5 $r9
+	mov $lr4 $lr3
+	addr $r10 $r6 	
+	load $lr0 $r11
+	load $lr1 $r12
+	load $lr2 $r13
+	load $lr3 $r14
+	load $lr4 $r15
+	mov $r11 $r16
+	incrsr	$r16 $r5
+	store $r16 $lr0
+	mov $r12 $r16
+	incrsr	$r16 $r5
+	store $r16 $lr1
+	mov $r13 $r16
+	incrsr	$r16 $r8
+	store $r16 $lr2
+	mov $r14 $r16
+	incrsr	$r16 $r5	
+	store $r16 $lr3
+	mov $r15 $r16
+	incrsr	$r16 $r10
+	store $r16 $lr4
+	loadi 0 $read_data
+	jump Idle
+movCursor:
+	mov $x $r3
+	mov $y $r4
+	shrli 4 $r3
+	addi 1 $r3
+	shrli 4 $r4
+	addi 1 $r4
+	add $r3 $r5
+	add $r4 $r6
+	cmp $r0 $r5
+	jumpg MinXSat
+	loadi 1 $r5
+MinXSat:
+	cmp $r1 $r5
+	jumpl MaxXSat
+	mov $r1 $r5
+	addi -1 $r5
+MaxXsat:
+	cmp $r0 $r6
+	jumpg MinYSat
+	loadi 1 $r6
+MinYSat:
+	cmp $r2 $r6
+	jumpl MaxYSat
+	mov $r2 $r6
+	addi -1 $r6
+MaxYsat:
+	mov $r6 $r7
+	addi -1 $r7
+	mov $r5 $r8
+	addi 1 $r8
+	mov $r6 $r9
+	addi 1 $r9
+	mov $r5 $r10
+	addi -1 $r10
 	jump DrawCursor
-MoveNegY:
-	sub $(reg_b) $(current_y_reg)	//negative y_v
-	jump DrawCursor
-
-MoveNegX:
-	sub $(reg_a) $(current_x_reg)	//negative x_v
-	cmp $0 $(reg_d)
-	jumpne MoveNegY
-	add $(reg_b) $(current_y_reg)	//positive y_v
-	jump DrawCursor
-
-Drawcursor:
-	//read current x,y pixel reg index into register (prev_color)
-	//store that addres into current address register
-	//draw cursor color into current x,y
-	jump idle
+ExtractAddr:
+	addr $r5 $r6
+	mov $lr4 $lr0
+	addr $r5 $r7
+	mov $lr4 $lr1
+	addr $r8 $r6
+	mov $lr4 $lr2
+	addr $r5 $r9
+	mov $lr4 $lr3
+	addr $r10 $r6
 
 
-Draw:
-	store $(selected_color_reg)	$(current_address)
-	cmp $0 $(reg_c)
-	jmpne DrawNegX
-	cmp $0 $(reg_d)
-	jumpne DrawNegYOnly
-DrawBothPositive:
-	cmp $0 $(reg_a)
-	jumpe DrawXDone 				//x is up to date
-	addi 1 $(current_x_reg)
-	addi -1 (reg_a)
-	cmp $0 $(reg_b)
-	jumpe DrawYDone					//y is up to date
-	addi 1 $(current_y_reg)
-	addi -1 (reg_b)
-	store $(selected_color_reg)	$(current_address)
-	//update address with new x,y
-	jump DrawBothPositive
-
-DrawPosXDone:				//positive Y
-	cmp $0 $(reg_b)
-	jumpe DrawDone
-	addi 1 $(current_y_reg)
-	addi -1 (reg_b)
-	store $(selected_color_reg)	$(current_address)
-	//update address with new x,y
-	jump DrawXDone	
-
-DrawPosYDone:				//positive X
-	cmp $0 $(reg_a)
-	jumpe DrawDone
-	addi 1 $(current_x_reg)
-	addi -1 (reg_a)
-	store $(selected_color_reg)	$(current_address)
-	//update address with new x,y SPECIAL INSTRUCTION?
-	jump DrawYDone
-
-DrawDone:
-	jump DrawCursor
 
 
-DrawNegX:
-	cmp $0 $(reg_d)
-	jumpne DrawBothNeg
-DrawNegXOnly:						//neg x, pos y
-	cmp $0 $(reg_a)
-	jumpe DrawPosXDone				//x is up to date
-	addi -1 $(current_x_reg)
-	addi -1 (reg_a)
-	cmp $0 $(reg_b)
-	jump DrawNegYDone				//y is up to date
-	addi 1 $(current_y_reg)
-	addi -1 (reg_b)
-	store $(selected_color_reg)	$(current_address)
-	//update address with new x,y SPECIAL INSTRUCTION?
-	jump DrawNegXOnly
-
-DrawBothNeg:
-	cmp $0 $(reg_a)
-	jumpe DrawNegXDone 				//x is up to date
-	addi -1 $(current_x_reg)
-	addi -1 (reg_a)
-	cmp $0 $(reg_b)
-	jumpe DrawNegYDone				//y is up to date
-	addi -1 $(current_y_reg)
-	addi -1 (reg_b)
-	store $(selected_color_reg)	$(current_address)
-	//update address with new x,y SPECIAL INSTRUCTION?
-	jump DrawBothPositive
-
-DrawNegXDone:						//Negative Y
-	cmp $0 $(reg_b)
-	jumpe DrawDone
-	addi -1 $(current_y_reg)
-	addi -1 (reg_b)
-	store $(selected_color_reg)	$(current_address)
-	//update address with new x,y SPECIAL INSTRUCTION?
-	jump DrawXDone	
-
-DrawNegYDone:						//Negative X
-	cmp $0 $(reg_a)
-	jumpe DrawDone
-	addi -1 $(current_x_reg)
-	addi -1 (reg_a)
-	store $(selected_color_reg)	$(current_address)
-	//update address with new x,y SPECIAL INSTRUCTION?
-	jump DrawYDone
-
-
-DrawNegYOnly:						//pos x, neg y
-	cmp $0 $(reg_a)
-	jumpe DrawNegXDone				//x is up to date
-	addi 1 $(current_x_reg)
-	addi -1 (reg_a)
-	cmp $0 $(reg_b)
-	jumpe DrawPosYDone				//y is up to date
-	addi -1 $(current_y_reg)
-	addi -1 (reg_b)
-	store $(selected_color_reg)	$(current_address)
-	//update address with new x,y SPECIAL INSTRUCTION?
-	jump DrawNegYOnly
-
-
+	
