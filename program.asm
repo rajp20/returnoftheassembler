@@ -9,10 +9,10 @@ ResetPC:
 	addi 1, $r5
 	loadi 0, $r1
 Loop:
-	loadi 5, $r7
-	loadi 6, $r8
-	cmp $r8, $r7
-	jumpg EndLoop
+	loadi 8, $r7
+	loadi 7, $r8
+	cmp $r7, $r8
+	jumpl EndLoop
 	cmp $lr0, $lr1
 	jumpe ResetPC
 	store $r5, $lr0
