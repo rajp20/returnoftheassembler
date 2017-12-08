@@ -98,7 +98,7 @@ MoveCursor:
 	cmp $r0 $right_click
 	jumpe NoDraw
 	loadi 20 $r17
-	cmp	$r17 $r5
+	cmp $r17 $r5
 	jumpg MinXSat
 	loadi 21 $r5
 	jump MinXSat
@@ -131,7 +131,7 @@ MaxYSat:
 	addi -1 $r10
 	jump DrawCursor
 Draw:
-	loadi 21 $r17
+	loadi 22 $r17
 	cmp $r17 $r5
 	jumpl MoveCursor
 	mov $r11 $r16
@@ -157,7 +157,7 @@ Draw:
 Erase:
 	loadi 22 $r17
 	cmp $r17 $r5
-	jumpl MoveCursor
+	jumpl PickColor
 	mov $r11 $r16
 	inersr $r16 $r5
 	store $r16 $lr0

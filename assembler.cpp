@@ -67,6 +67,7 @@ int main(int argv, char **argc) {
   opCodeMapToBinary["incrsr"] = "10001";
   opCodeMapToBinary["indraw"] = "10010";
   opCodeMapToBinary["inersr"] = "10011";
+  opCodeMapToBinary["setcolr"] = "10100";
 
   // All of the registers with their associated binary value. $r0 - $r27
   regMapToBinary["$r0"] = "00000";
@@ -349,16 +350,16 @@ void createColorPallet() {
   }
 
   newFile << "0000000011111111,\n"; // Canvas Color
-  newFile << "0000000010110101,\n"; // Default color border
+  newFile << "0000000011101101,\n"; // Default color border
   newFile << "0000000010101010,\n"; // Current Slected color border
-  newFile << "0000000011111111,\n"; // 3
+  newFile << "0000000011010011,\n"; // 3
   newFile << "0000000000000000,\n"; // 4
   newFile << "0000000011000000,\n"; // 5
   newFile << "0000000010010010,\n"; // 6
   newFile << "0000000011010101,\n"; // 7
   newFile << "0000000011000111,\n"; // 8
   newFile << "0000000000011011,\n"; // 9
-  newFile << "0000000001001101,\n"; // 10
+  newFile << "0000000001010101,\n"; // 10
   newFile << "0000000001011110,\n"; // 11
   newFile << "0000000000111111,\n"; // 12
   newFile << "0000000011111011,\n"; // 13
